@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
   "name": "SwiftCopy",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Because copying text should be faster than your fastest friend in a running race! 🏃‍♂️💨",
   "permissions": [
     "clipboardWrite", 
-    "storage", 
-    "contextMenus", 
+    "storage",  
     "notifications"
   ],
   "background": {
