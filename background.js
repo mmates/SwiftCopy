@@ -1,6 +1,14 @@
 // Spracovanie kliknutia na ikonu addonu
 chrome.action.onClicked.addListener((tab) => {
   toggleExtension();  // Vypnúť alebo zapnúť rozšírenie
+
+  // Spustenie skriptu po kliknutí na ikonu
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: function () {
+      alert('SwiftCopy is active!');
+    }
+  });
 });
 
 // Funkcia na prepnutie stavu rozšírenia a zmenu ikony
@@ -29,7 +37,7 @@ function toggleExtension() {
       // Vytvorenie notifikácie
       chrome.notifications.create({
         type: "basic",
-        iconUrl: iconPaths[256],  // Používaj ikonu s veľkosťou 48x48 pre notifikáciu
+        iconUrl: iconPaths[256],  // Používaj ikonu s veľkosťou 256x256 pre notifikáciu
         title: "SwiftCopy",
         message: message
       });
@@ -52,3 +60,4 @@ chrome.runtime.onInstalled.addListener(function() {
     console.log("SwiftCopy initialized and enabled by default.");
   });
 });
+

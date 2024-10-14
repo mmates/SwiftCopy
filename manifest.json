@@ -1,12 +1,14 @@
 {
   "manifest_version": 3,
   "name": "SwiftCopy",
-  "version": "0.1.9",
+  "version": "0.2.2",
   "description": "Because copying text should be faster than your fastest friend in a running race! 🏃‍♂️💨",
   "permissions": [
     "clipboardWrite", 
     "storage",  
-    "notifications"
+    "notifications",
+    "activeTab",
+    "scripting"
   ],
   "background": {
     "service_worker": "background.js"
@@ -29,7 +31,9 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
   "options_ui": {
