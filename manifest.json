@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SwiftCopy",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Because copying text should be faster than your fastest friend in a running race! 🏃‍♂️💨",
   "permissions": [
     "clipboardWrite", 

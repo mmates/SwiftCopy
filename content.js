@@ -1,53 +1,49 @@
 document.addEventListener("mouseup", function () {
-    chrome.storage.sync.get('enabled', function (data) {
-      if (data.enabled !== false) {  // Predvolene je zapnuté
-        const selectedText = window.getSelection().toString();
-        if (selectedText) {
-          // Získať rozsah označeného textu
-          const selection = window.getSelection();
-          if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-  
-            // Prebliknutie textu (rýchle odstránenie a vrátenie označenia)
-            flashSelection();
-  
-            // Skopírovanie textu
-            copyToClipboard(selectedText);
+  chrome.storage.sync.get('enabled', function (data) {
+      if (data.enabled !== false) {  // Predvolene zapnuté
+          const selectedText = window.getSelection().toString();
+          if (selectedText) {
+              // Overíme, či stránka nie je Google Docs
+              if (!window.location.hostname.includes("docs.google.com")) {
+                  flashSelection();
+              }
+
+              copyToClipboard(selectedText);
           }
-        }
       }
-    });
   });
-  
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(function () {
+});
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function () {
       console.log("Text copied to clipboard: " + text);
-    }).catch(function (err) {
+  }).catch(function (err) {
       console.error("Could not copy text: ", err);
-    });
-  }
-  
-  function flashSelection() {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
+  });
+}
+
+function flashSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      const selectedRange = range.cloneRange();
-  
-      let blinkCount = 0; // Počet prebliknutí
-  
-      // Funkcia pre jedno prebliknutie
-      function toggleSelection() {
-        if (blinkCount < 3) {  // Nastavené na 3 prebliknutia
-          selection.removeAllRanges();
+      const selectedText = range.toString();
+
+      // Vytvoríme nový span element na vizuálny efekt
+      const highlightSpan = document.createElement("span");
+      highlightSpan.style.backgroundColor = "yellow";
+      highlightSpan.style.color = "black";
+      highlightSpan.textContent = selectedText;
+
+      range.deleteContents();
+      range.insertNode(highlightSpan);
+
+      setTimeout(() => {
+          highlightSpan.style.backgroundColor = "transparent"; // Prebliknutie
           setTimeout(() => {
-            selection.addRange(selectedRange);
-            blinkCount++;
-            setTimeout(toggleSelection, 10);  // 10 ms pauza medzi prebliknutiami
-          }, 10);  // 10 ms pauza po odstránení výberu
-        }
-      }
-  
-      toggleSelection();  // Spusti prebliknutie
-    }
+              range.selectNode(highlightSpan);
+              selection.removeAllRanges();
+              selection.addRange(range);
+          }, 100);
+      }, 100);
   }
-  
+}
